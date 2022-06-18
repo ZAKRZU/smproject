@@ -35,14 +35,17 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Get data from form
             $user = $form->getData();
-
+            
             $plainPassword = $user->getPassword();
 
+            // Hashing password
             $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
 
             $user->setPassword($hashedPassword);
 
+            // Saving whole user to database
             $userRepository->add($user, true);
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
@@ -69,14 +72,17 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Get data from form
             $user = $form->getData();
-
+            
             $plainPassword = $user->getPassword();
 
+            // Hashing password
             $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
 
             $user->setPassword($hashedPassword);
 
+            // Saving whole user to database
             $userRepository->add($user, true);
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);

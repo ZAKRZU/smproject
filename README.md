@@ -9,14 +9,15 @@ For PHP extensions you can use the default ones required by symfony. You can che
 symfony check:requirements
 ```
 
-# Instalation
+# Installation
 First (after `git clone`) install all dependencies
 ```sh
 composer install
 ```
-The second step is database configuration. To do this create an .env.local file, and configure the database
+The second step is to configure your .env.local. This file should contain everything that shouldn't be commited, such as secrets, database connection data etc.
 ```sh
 # File: .env.local
+# Database connection example
 
 # to use mysql:
 DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=5.7"

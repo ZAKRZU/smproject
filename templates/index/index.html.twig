@@ -1,21 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello IndexController!{% endblock %}
+{% block title %}Welcome!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/zakrzu/smproject/src/Controller/IndexController.php'|file_link(0) }}">src/Controller/IndexController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/zakrzu/smproject/templates/index/index.html.twig'|file_link(0) }}">templates/index/index.html.twig</a></code></li>
-    </ul>
-    <a href="{{ path('app_dashboard') }}" class="btn btn-primary">Dashboard</a>
+<div class="container m-auto">
+    <div class="container">
+        <h1>Hello!</h1>
+        <p>You can entry your dashboard by clicking on the button below!</p>
+        <a href="{{ path('app_dashboard') }}" class="btn btn-primary">Dashboard</a>
+    </div>
 </div>
 {% endblock %}
