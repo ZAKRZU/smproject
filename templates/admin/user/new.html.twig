@@ -1,0 +1,16 @@
+{% extends 'base_menu.html.twig' %}
+
+{% block title %}New User{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_admin_user') }}" class="btn btn-primary m-2">back to list</a>
+    <div class="container">
+        <h1>Create new User</h1>
+        {{ form_start(form) }}
+            {{ form_row(form.email) }}
+            {{ form_row(form.password) }}
+            {{ form_row(form.roles) }}
+            <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
