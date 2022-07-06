@@ -44,3 +44,12 @@ To start server type
 ```sh
 symfony server:start
 ```
+
+You can now create first user (admin)
+```sh
+php bin/console app:create-user <email> <password>
+```
+For example
+```sh
+php bin/console app:create-user admi@mydomain.com MyCoolPassword
+```
