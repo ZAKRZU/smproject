@@ -1,0 +1,97 @@
+{% extends 'base_menu.html.twig' %}
+
+{% block title %}Inventory {{ inventory.id }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Inventory {{ inventory.id }}</h1>
+
+        <div>
+            <img src="https://img.bricklink.com/ItemImage/PN/5/2357.png">
+        </div>
+
+        <div class="row align-items-start">
+            <div class="col">
+                <h2>Item information</h2>
+
+                <div class="row align-items-start">
+                    <div class="col">
+                        Item number: 
+                    </div>
+                    <div class="col">
+                        {{ inventory.itemNo }}
+                    </div>
+                </div>
+
+                <div class="row align-items-start">
+                    <div class="col">
+                        Item name: 
+                    </div>
+                    <div class="col">
+                        {{ inventory.itemName }}
+                    </div>
+                </div>
+
+                <div class="row align-items-start">
+                    <div class="col">
+                        Item type: 
+                    </div>
+                    <div class="col">
+                        {{ inventory.itemType }}
+                    </div>
+                </div>
+
+                <div class="row align-items-start">
+                    <div class="col">
+                        Color name: 
+                    </div>
+                    <div class="col">
+                        {{ inventory.colorName }}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col">
+                <h2>Lot information</h2>
+
+                <div class="row align-items-start">
+                    <div class="col">
+                        Quantity: 
+                    </div>
+                    <div class="col">
+                        {{ inventory.Quantity }}
+                    </div>
+                </div>
+
+                <div class="row align-items-start">
+                    <div class="col">
+                        Condition: 
+                    </div>
+                    <div class="col">
+                        {{ inventory.newOrUsed }}
+                    </div>
+                </div>
+
+                <div class="row align-items-start">
+                    <div class="col">
+                        Completeness: 
+                    </div>
+                    <div class="col">
+                        {{ inventory.completeness }}
+                    </div>
+                </div>
+
+                <div class="row align-items-start">
+                    <div class="col">
+                        Unit price: 
+                    </div>
+                    <div class="col">
+                        {{ inventory.unitPrice }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+{% endblock %}

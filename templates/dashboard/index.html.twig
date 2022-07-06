@@ -4,6 +4,41 @@
 
 {% block body %}
 <div class="container">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Dashboard</h1>
+
+    <div class="container">
+        <h2>Inventory list</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Item numer</th>
+                    <th>Item name</th>
+                    <th>Item type</th>
+                    <th>Category id</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for inventory in users %}
+                <tr>
+                    <td>{{ inventory.id }}</td>
+                    <td>{{ inventory.itemNo }}</td>
+                    <td>{{ inventory.itemName }}</td>
+                    <td>{{ inventory.itemType }}</td>
+                    <td>{{ inventory.itemCategoryId }}</td>
+                    <td><a href="{{ path('app_inventory_show', {'id': inventory.id}) }}" class="btn btn-light">show</a></td>
+                    
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path('app_inventory_new') }}" class="btn btn-success">Create new</a>
+    </div>
+    
 </div>
 {% endblock %}
