@@ -71,9 +71,9 @@ class AdminController extends AbstractController
     }
 
     #[Route('/user/show/{id}', name: 'app_admin_user_show')]
-    public function adminUserShow(UserRepository $userRepositor, int $id): Response
+    public function adminUserShow(UserRepository $userRepository, int $id): Response
     {
-        $user = $userRepositor->find($id);
+        $user = $userRepository->find($id);
 
         return $this->render('admin/user/show.html.twig', [
             'controller_name' => 'AdminController',
