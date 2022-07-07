@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Inventory;
+use App\Htpp\HttpHandle;
 use App\Repository\InventoryRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/inventory')]
 class InventoryController extends AbstractController
@@ -69,6 +72,18 @@ class InventoryController extends AbstractController
         return $this->render('inventory/show.html.twig', [
             'controller_name' => 'InventoryController',
             'inventory' => $inventory,
+			'menu' => ''
+        ]);
+    }
+
+	#[Route('/pull', name: 'app_inventory_pull')]
+    public function pull(){
+
+		$httpHandle = new HttpHandle(HttpClient::create());
+
+        return $this->render('inventory/pull.html.twig', [
+            'controller_name' => 'InventoryController',
+            'response' => $httpHandle->fetchBrickLinkInventory(),
 			'menu' => ''
         ]);
     }
