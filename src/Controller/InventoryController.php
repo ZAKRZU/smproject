@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+
 #[Route('/inventory')]
 class InventoryController extends AbstractController
 {
@@ -76,6 +77,7 @@ class InventoryController extends AbstractController
         ]);
     }
 
+
 	#[Route('/pull', name: 'app_inventory_pull')]
     public function pull(){
 
@@ -87,5 +89,4 @@ class InventoryController extends AbstractController
 			'menu' => ''
         ]);
     }
-
 }
