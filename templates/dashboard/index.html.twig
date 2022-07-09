@@ -6,28 +6,28 @@
 <div class="container">
     <h1>Dashboard</h1>
 
-    <div class="container">
-        <h2>Inventory list</h2>
+    <div class="container mb-3">
+        <h2>Inventory list ({{ total_inventories }})</h2>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Item numer</th>
+                    <th>Inv id</th>
+                    <th>Item id number</th>
                     <th>Item name</th>
                     <th>Item type</th>
-                    <th>Category id</th>
+                    <th>Creation date</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-            {% for inventory in users %}
+            {% for item in inventories %}
                 <tr>
-                    <td>{{ inventory.id }}</td>
-                    <td>{{ inventory.itemNo }}</td>
-                    <td>{{ inventory.itemName }}</td>
-                    <td>{{ inventory.itemType }}</td>
-                    <td>{{ inventory.itemCategoryId }}</td>
-                    <td><a href="{{ path('app_inventory_show', {'id': inventory.id}) }}" class="btn btn-light">show</a></td>
+                    <td>{{ item.inventoryId }}</td>
+                    <td>{{ item.Item.no }}</td>
+                    <td>{{ item.Item.name }}</td>
+                    <td>{{ item.Item.type }}</td>
+                    <td>{{ item.dateCreated|date("d/m/Y H:i") }}</td>
+                    <td><a href="{{ path('app_inventory_show', {'id': item.id}) }}" class="btn btn-light">show</a></td>
                     
                 </tr>
             {% else %}

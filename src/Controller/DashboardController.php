@@ -12,10 +12,13 @@ class DashboardController extends AbstractController
     #[Route('/dashboard', name: 'app_dashboard')]
     public function index(InventoryRepository $inventoryRepository): Response
     {
+        $inventories = $inventoryRepository->findAll();
+
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'DashboardController',
             'menu' => '',
-            'users' => $inventoryRepository->findAll()
+            'inventories' => $inventories,
+            'total_inventories' => count($inventories),
         ]);
     }
 

@@ -3,6 +3,7 @@
 {% block title %}Inventory {{ inventory.id }}{% endblock %}
 
 {% block body %}
+    <a href="{{ path('app_dashboard') }}" class="btn btn-primary m-2">back to list</a>
     <div class="container">
         <h1>Inventory {{ inventory.id }}</h1>
 
@@ -19,7 +20,7 @@
                         Item number: 
                     </div>
                     <div class="col">
-                        {{ inventory.itemNo }}
+                        {{ inventory.Item.no }}
                     </div>
                 </div>
 
@@ -28,7 +29,7 @@
                         Item name: 
                     </div>
                     <div class="col">
-                        {{ inventory.itemName }}
+                        {{ inventory.Item.name }}
                     </div>
                 </div>
 
@@ -37,7 +38,7 @@
                         Item type: 
                     </div>
                     <div class="col">
-                        {{ inventory.itemType }}
+                        {{ inventory.item.Type }}
                     </div>
                 </div>
 
@@ -60,7 +61,7 @@
                         Quantity: 
                     </div>
                     <div class="col">
-                        {{ inventory.Quantity }}
+                        {{ inventory.quantity }}
                     </div>
                 </div>
 
@@ -79,12 +80,20 @@
                     </div>
                     <div class="col">
                         {{ inventory.saleRate }}
-                        Completeness: 
-                    </div>
-                    <div class="col">
-                        {{ inventory.completeness }}
                     </div>
                 </div>
+                    <div class="row align-items-start">
+                        <div class="col">
+                            Completeness:
+                        </div>
+                        <div class="col">
+                            {% if inventory.completeness %}
+                                {{ inventory.completeness }}
+                            {% else %}
+                                <span>NULL</span>
+                            {% endif %}
+                        </div>
+                    </div>
 
                 <div class="row align-items-start">
                     <div class="col">

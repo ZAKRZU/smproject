@@ -3,8 +3,12 @@
 {% block title %}Pull Bricklink Inventory {% endblock %}
 
 {% block body %}
+    <a href="{{ path('app_dashboard') }}" class="btn btn-primary m-2">back to list</a>
     <div class="container">
-        <p> {{ response }}</p>
+        <p>{{ updated_items }} items has been updated</p>
+        <p>{{ updated_invs }} inventories has been updated </p>
+        {# <p>{{ dump(test1) }} </p>
+        <p>{{ dump(test2) }} </p> #}
     </div>
         
 {% endblock %}

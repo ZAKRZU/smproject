@@ -9,24 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Inventory
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy:"NONE")]
+    #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
-
-    #[ORM\Column(type: 'json')]
-    private $item = [];
-
-    #[ORM\Column(type: 'string', length: 20)]
-    private $itemNo;
-
-    #[ORM\Column(type: 'string', length: 300)]
-    private $itemName;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private $itemType;
-
-    #[ORM\Column(type: 'integer')]
-    private $itemCategoryId;
 
     #[ORM\Column(type: 'integer')]
     private $colorId;
@@ -97,8 +82,17 @@ class Inventory
     #[ORM\Column(type: 'integer', nullable: true)]
     private $stockRoomId;
 
-    public function __construct($json)
+    #[ORM\ManyToOne(targetEntity: BrickItem::class, inversedBy: 'inventories')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $Item;
+
+    #[ORM\Column(type: 'integer')]
+    private $inventoryId;
+
+    public function __construct($json = null)
     {
+        if ($json == null)
+            return;
         $data = json_decode($json);
         $this->setId($data->inventory_id);
         $this->setItem($data->item);
@@ -140,65 +134,6 @@ class Inventory
     public function setId(int $id): self
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getItem(): ?array
-    {
-        return $this->item;
-    }
-
-    public function setItem($item): self
-    {
-        $this->item = $item;
-        return $this;
-    }
-
-    public function getItemNo(): ?string
-    {
-        return $this->itemNo;
-    }
-
-    public function setItemNo(string $itemNo): self
-    {
-        $this->itemNo = $itemNo;
-
-        return $this;
-    }
-
-    public function getItemName(): ?string
-    {
-        return $this->itemName;
-    }
-
-    public function setItemName(string $itemName): self
-    {
-        $this->itemName = $itemName;
-
-        return $this;
-    }
-
-    public function getItemType(): ?string
-    {
-        return $this->itemType;
-    }
-
-    public function setItemType(string $itemType): self
-    {
-        $this->itemType = $itemType;
-
-        return $this;
-    }
-
-    public function getItemCategoryId(): ?int
-    {
-        return $this->itemCategoryId;
-    }
-
-    public function setItemCategoryId(int $itemCategoryId): self
-    {
-        $this->itemCategoryId = $itemCategoryId;
 
         return $this;
     }
@@ -477,6 +412,89 @@ class Inventory
         $this->stockRoomId = $stockRoomId;
 
         return $this;
+    }
+
+    public function getItem(): ?BrickItem
+    {
+        return $this->Item;
+    }
+
+    public function setItem(?BrickItem $Item): self
+    {
+        $this->Item = $Item;
+
+        return $this;
+    }
+
+    public function getInventoryId(): ?int
+    {
+        return $this->inventoryId;
+    }
+
+    public function setInventoryId(int $inventoryId): self
+    {
+        $this->inventoryId = $inventoryId;
+
+        return $this;
+    }
+
+    // Temporary solution
+    public function update(Inventory $inventory): bool
+    {
+        $date1 = $this->getDateCreated(); // this date is different from date in database
+        $date2 = $inventory->getDateCreated();
+        $bool = $this->getInventoryId() === $inventory->getInventoryId() &&
+                $this->getColorId() === $inventory->getColorId() &&
+                $this->getColorName() === $inventory->getColorName() &&
+                $this->getQuantity() === $inventory->getQuantity() &&
+                $this->getNewOrUsed() === $inventory->getNewOrUsed() &&
+                $this->getUnitPrice() === $inventory->getUnitPrice() &&
+                $this->getBindId() === $inventory->getBindId() &&
+                $this->getDescription() === $inventory->getDescription() &&
+                $this->getRemarks() === $inventory->getRemarks() &&
+                $this->getBulk() === $inventory->getBulk() &&
+                $this->isIsRetain() === $inventory->isIsRetain() &&
+                $this->isIsStockRoom() === $inventory->isIsStockRoom() &&
+                // $date1 == $date2 && for some reason date1 is 2 hours behind time put in database
+                $this->getMyCost() === $inventory->getMyCost() &&
+                $this->getSaleRate() === $inventory->getSaleRate() &&
+                $this->getTierPrice1() === $inventory->getTierPrice1() &&
+                $this->getTierPrice2() === $inventory->getTierPrice2() &&
+                $this->getTierPrice3() === $inventory->getTierPrice3() &&
+                $this->getTierQuantity1() === $inventory->getTierQuantity1() &&
+                $this->getTierQuantity2() === $inventory->getTierQuantity2() &&
+                $this->getTierQuantity3() === $inventory->getTierQuantity3() &&
+                $this->getMyWeight() === $inventory->getMyWeight() &&
+                $this->getCompleteness() === $inventory->getCompleteness() &&
+                $this->getStockRoomId() === $inventory->getStockRoomId();
+
+                if ($bool)
+                    return !$bool;
+                $this->setInventoryId($inventory->getInventoryId());
+                $this->setColorId($inventory->getColorId());
+                $this->setColorName($inventory->getColorName());
+                $this->setQuantity($inventory->getQuantity());
+                $this->setNewOrUsed($inventory->getNewOrUsed());
+                $this->setUnitPrice($inventory->getUnitPrice());
+                $this->setBindId($inventory->getBindId());
+                $this->setDescription($inventory->getDescription());
+                $this->setRemarks($inventory->getRemarks());
+                $this->setBulk($inventory->getBulk());
+                $this->setIsRetain($inventory->isIsRetain());
+                $this->setIsStockRoom($inventory->isIsStockRoom());
+                $this->setDateCreated($inventory->getDateCreated());
+                $this->setMyCost($inventory->getMyCost());
+                $this->setSaleRate($inventory->getSaleRate());
+                $this->setTierPrice1($inventory->getTierPrice1());
+                $this->setTierPrice2($inventory->getTierPrice2());
+                $this->setTierPrice3($inventory->getTierPrice3());
+                $this->setTierQuantity1($inventory->getTierQuantity1());
+                $this->setTierQuantity2($inventory->getTierQuantity2());
+                $this->setTierQuantity3($inventory->getTierQuantity3());
+                $this->setMyWeight($inventory->getMyWeight());
+                $this->setCompleteness($inventory->getCompleteness());
+                $this->setStockRoomId($inventory->getStockRoomId());
+        return !$bool;
     }
 
 }
