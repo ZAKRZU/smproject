@@ -16,7 +16,6 @@ class DashboardController extends AbstractController
 
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'DashboardController',
-            'menu' => '',
             'inventories' => $inventories,
             'total_inventories' => count($inventories),
         ]);

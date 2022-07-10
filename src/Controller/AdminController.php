@@ -13,18 +13,11 @@ use App\Form\UserType;
 class AdminController extends AbstractController
 {
 
-    private function getMenuList()
-    {
-        $menu_list = [['User', $this->generateUrl('app_admin_user')], ['Settings', 'user']];
-        return $menu_list;
-    }
-
     #[Route('/', name: 'app_admin')]
     public function index(): Response
     {
         return $this->render('admin/index.html.twig', [
             'controller_name' => 'AdminController',
-            'menu' => $this->getMenuList(),
         ]);
     }
 
@@ -33,7 +26,6 @@ class AdminController extends AbstractController
     {
         return $this->render('admin/user/list.html.twig', [
             'controller_name' => 'AdminController',
-            'menu' => $this->getMenuList(),
             'users' => $userRepository->findAll(),
         ]);
     }
@@ -50,7 +42,6 @@ class AdminController extends AbstractController
 
         return $this->renderForm('admin/user/new.html.twig', [
             'controller_name' => 'AdminController',
-            'menu' => $this->getMenuList(),
             'form' => $form,
         ]);
     }
@@ -64,7 +55,6 @@ class AdminController extends AbstractController
 
         return $this->renderForm('admin/user/edit.html.twig', [
             'controller_name' => 'AdminController',
-            'menu' => $this->getMenuList(),
             'user' => $user,
             'form' => $form,
         ]);
@@ -77,7 +67,6 @@ class AdminController extends AbstractController
 
         return $this->render('admin/user/show.html.twig', [
             'controller_name' => 'AdminController',
-            'menu' => $this->getMenuList(),
             'user' => $user,
         ]);
     }

@@ -1,0 +1,38 @@
+<ul class="navbar-nav">
+    {% if controller_name == 'AdminController' %}
+        <li class="nav-item btn-group">
+            <a class="nav-link {% if app.request.attributes.get('_route') starts with 'app_admin_user' %}active{% endif %}" href="{{ path('app_admin_user') }}">
+                Users
+            </a>
+            <a type="button" class="nav-link dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ path('app_admin_user_new') }}">Add User</a></li>
+            </ul>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link {% if app.request.attributes.get('_route') starts with 'app_dashboard' %}active{% endif %}" aria-current="page" href="{{ path('app_dashboard') }}">Home</a>
+        </li>
+    {% endif %}
+</ul>
+
+<ul class="navbar-nav">
+    {% if controller_name != 'AdminController' %}
+        <li class="nav-item">
+            <a href="{{ path('app_admin') }}" class="nav-link text-decoration-none">Admin Panel</a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a href="{{ path('app_dashboard') }}" class="nav-link text-decoration-none">Go back to dashboard</a>
+        </li>
+    {% endif %}
+    
+    <li class="nav-item">
+        <span class="nav-link">{{ app.user.email }}</span>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="{{ path('app_logout') }}">Logout</a>
+    </li>
+</ul>

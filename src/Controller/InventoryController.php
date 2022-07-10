@@ -77,7 +77,6 @@ class InventoryController extends AbstractController
         return $this->render('inventory/show.html.twig', [
             'controller_name' => 'InventoryController',
             'inventory' => $inventory,
-			'menu' => ''
         ]);
     }
 	
@@ -169,7 +168,6 @@ class InventoryController extends AbstractController
         return $this->render('inventory/pull.html.twig', [
             'controller_name' => 'InventoryController',
             // 'response' => $inventoryRepository->findAll(),
-			'menu' => '',
 			'updated_items' => $updated_items,
 			'updated_invs' => $updated_invs,
 			// 'test1' => $inventory,
