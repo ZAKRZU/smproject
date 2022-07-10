@@ -438,63 +438,66 @@ class Inventory
         return $this;
     }
 
+    public function isEqual(Inventory $inventory): bool
+    {
+        return $this->getInventoryId() === $inventory->getInventoryId() &&
+        $this->getColorId() === $inventory->getColorId() &&
+        $this->getColorName() === $inventory->getColorName() &&
+        $this->getQuantity() === $inventory->getQuantity() &&
+        $this->getNewOrUsed() === $inventory->getNewOrUsed() &&
+        $this->getUnitPrice() === $inventory->getUnitPrice() &&
+        $this->getBindId() === $inventory->getBindId() &&
+        $this->getDescription() === $inventory->getDescription() &&
+        $this->getRemarks() === $inventory->getRemarks() &&
+        $this->getBulk() === $inventory->getBulk() &&
+        $this->isIsRetain() === $inventory->isIsRetain() &&
+        $this->isIsStockRoom() === $inventory->isIsStockRoom() &&
+        $this->getDateCreated() == $inventory->getDateCreated() &&
+        $this->getMyCost() === $inventory->getMyCost() &&
+        $this->getSaleRate() === $inventory->getSaleRate() &&
+        $this->getTierPrice1() === $inventory->getTierPrice1() &&
+        $this->getTierPrice2() === $inventory->getTierPrice2() &&
+        $this->getTierPrice3() === $inventory->getTierPrice3() &&
+        $this->getTierQuantity1() === $inventory->getTierQuantity1() &&
+        $this->getTierQuantity2() === $inventory->getTierQuantity2() &&
+        $this->getTierQuantity3() === $inventory->getTierQuantity3() &&
+        $this->getMyWeight() === $inventory->getMyWeight() &&
+        $this->getCompleteness() === $inventory->getCompleteness() &&
+        $this->getStockRoomId() === $inventory->getStockRoomId();
+    }
+
     // Temporary solution
     public function update(Inventory $inventory): bool
     {
-        $date1 = $this->getDateCreated(); // this date is different from date in database
-        $date2 = $inventory->getDateCreated();
-        $bool = $this->getInventoryId() === $inventory->getInventoryId() &&
-                $this->getColorId() === $inventory->getColorId() &&
-                $this->getColorName() === $inventory->getColorName() &&
-                $this->getQuantity() === $inventory->getQuantity() &&
-                $this->getNewOrUsed() === $inventory->getNewOrUsed() &&
-                $this->getUnitPrice() === $inventory->getUnitPrice() &&
-                $this->getBindId() === $inventory->getBindId() &&
-                $this->getDescription() === $inventory->getDescription() &&
-                $this->getRemarks() === $inventory->getRemarks() &&
-                $this->getBulk() === $inventory->getBulk() &&
-                $this->isIsRetain() === $inventory->isIsRetain() &&
-                $this->isIsStockRoom() === $inventory->isIsStockRoom() &&
-                // $date1 == $date2 && for some reason date1 is 2 hours behind time put in database
-                $this->getMyCost() === $inventory->getMyCost() &&
-                $this->getSaleRate() === $inventory->getSaleRate() &&
-                $this->getTierPrice1() === $inventory->getTierPrice1() &&
-                $this->getTierPrice2() === $inventory->getTierPrice2() &&
-                $this->getTierPrice3() === $inventory->getTierPrice3() &&
-                $this->getTierQuantity1() === $inventory->getTierQuantity1() &&
-                $this->getTierQuantity2() === $inventory->getTierQuantity2() &&
-                $this->getTierQuantity3() === $inventory->getTierQuantity3() &&
-                $this->getMyWeight() === $inventory->getMyWeight() &&
-                $this->getCompleteness() === $inventory->getCompleteness() &&
-                $this->getStockRoomId() === $inventory->getStockRoomId();
-
-                if ($bool)
-                    return !$bool;
-                $this->setInventoryId($inventory->getInventoryId());
-                $this->setColorId($inventory->getColorId());
-                $this->setColorName($inventory->getColorName());
-                $this->setQuantity($inventory->getQuantity());
-                $this->setNewOrUsed($inventory->getNewOrUsed());
-                $this->setUnitPrice($inventory->getUnitPrice());
-                $this->setBindId($inventory->getBindId());
-                $this->setDescription($inventory->getDescription());
-                $this->setRemarks($inventory->getRemarks());
-                $this->setBulk($inventory->getBulk());
-                $this->setIsRetain($inventory->isIsRetain());
-                $this->setIsStockRoom($inventory->isIsStockRoom());
-                $this->setDateCreated($inventory->getDateCreated());
-                $this->setMyCost($inventory->getMyCost());
-                $this->setSaleRate($inventory->getSaleRate());
-                $this->setTierPrice1($inventory->getTierPrice1());
-                $this->setTierPrice2($inventory->getTierPrice2());
-                $this->setTierPrice3($inventory->getTierPrice3());
-                $this->setTierQuantity1($inventory->getTierQuantity1());
-                $this->setTierQuantity2($inventory->getTierQuantity2());
-                $this->setTierQuantity3($inventory->getTierQuantity3());
-                $this->setMyWeight($inventory->getMyWeight());
-                $this->setCompleteness($inventory->getCompleteness());
-                $this->setStockRoomId($inventory->getStockRoomId());
-        return !$bool;
+        if (!$this->isEqual($inventory))
+        {
+            $this->setInventoryId($inventory->getInventoryId());
+            $this->setColorId($inventory->getColorId());
+            $this->setColorName($inventory->getColorName());
+            $this->setQuantity($inventory->getQuantity());
+            $this->setNewOrUsed($inventory->getNewOrUsed());
+            $this->setUnitPrice($inventory->getUnitPrice());
+            $this->setBindId($inventory->getBindId());
+            $this->setDescription($inventory->getDescription());
+            $this->setRemarks($inventory->getRemarks());
+            $this->setBulk($inventory->getBulk());
+            $this->setIsRetain($inventory->isIsRetain());
+            $this->setIsStockRoom($inventory->isIsStockRoom());
+            $this->setDateCreated($inventory->getDateCreated());
+            $this->setMyCost($inventory->getMyCost());
+            $this->setSaleRate($inventory->getSaleRate());
+            $this->setTierPrice1($inventory->getTierPrice1());
+            $this->setTierPrice2($inventory->getTierPrice2());
+            $this->setTierPrice3($inventory->getTierPrice3());
+            $this->setTierQuantity1($inventory->getTierQuantity1());
+            $this->setTierQuantity2($inventory->getTierQuantity2());
+            $this->setTierQuantity3($inventory->getTierQuantity3());
+            $this->setMyWeight($inventory->getMyWeight());
+            $this->setCompleteness($inventory->getCompleteness());
+            $this->setStockRoomId($inventory->getStockRoomId());
+            return true;
+        }
+        return false;
     }
 
 }

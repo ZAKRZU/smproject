@@ -170,8 +170,6 @@ class InventoryController extends AbstractController
             // 'response' => $inventoryRepository->findAll(),
 			'updated_items' => $updated_items,
 			'updated_invs' => $updated_invs,
-			// 'test1' => $inventory,
-			// 'test2' => $find_inventory,
         ]);
     }
 }
