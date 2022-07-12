@@ -1,0 +1,14 @@
+{% extends 'base_menu.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Dashboard</h1>
+
+    <div class="container mb-3">
+        <p>{{ dump(githubapi) }}</p>
+    </div>
+    
+</div>
+{% endblock %}

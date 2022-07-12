@@ -7,6 +7,7 @@ use App\Entity\BrickItem;
 use App\Htpp\HttpHandle;
 use App\Repository\InventoryRepository;
 use App\Repository\BrickItemRepository;
+use App\Service\BrickLink;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -82,21 +83,31 @@ class InventoryController extends AbstractController
 	
 
 	#[Route('/pull', name: 'app_inventory_pull')]
-    public function pull(InventoryRepository $inventoryRepository, BrickItemRepository $itemRepository): Response 
+    public function pull(InventoryRepository $inventoryRepository, BrickItemRepository $itemRepository, BrickLink $api): Response 
 	{
+		$error = "";
+		// // setup api request
+		// $httpHandle = new HttpHandle(HttpClient::create());
 
-		// setup api request
-		$httpHandle = new HttpHandle(HttpClient::create());
+		// // fetch items
+		// $response = $httpHandle->fetchBrickLinkInventory();
 
-		// fetch items
-		$response = $httpHandle->fetchBrickLinkInventory();
+		// // decode json respone to php array
+		// $response_json = json_decode($response, true);
+		$response_json = $api->getInventories();
 
-		// decode json respone to php array
-		$response_json = json_decode($response, true);
+		if ($response_json['meta']['code'] !== 200)
+		{
+			$error = array('message' => $response_json['meta']['message'], 'description' => $response_json['meta']['description']);
+			return $this->render('inventory/pull.html.twig', [
+				'controller_name' => 'InventoryController',
+				'error' => $error,
+			]);
+		}
 
 		// for counting updated records
 		$updated_items = 0;
-		$updated_invs = 0;
+		$updated_invs = [];
 
 		// processing all inventories from request
 		foreach ($response_json['data'] as $key => $value) {
@@ -152,14 +163,17 @@ class InventoryController extends AbstractController
 				// if not create
 
 				$inventoryRepository->add($inventory, true);
-				$updated_invs++;
+				// $updated_invs++;
+				array_push($updated_invs, [null, $inventory]);
 			} else {
 				// otherwise assign
+				$old_inv = clone $find_inventory;
 				if ($find_inventory->update($inventory))
 				{
 					// it will update inventory
 					$inventoryRepository->add($find_inventory, true);
-					$updated_invs++;
+					// $updated_invs++;
+					array_push($updated_invs, [$old_inv, $find_inventory]);
 				}
 				// $inventory = $find_inventory;
 			}
@@ -168,8 +182,161 @@ class InventoryController extends AbstractController
         return $this->render('inventory/pull.html.twig', [
             'controller_name' => 'InventoryController',
             // 'response' => $inventoryRepository->findAll(),
+			'error' => '',
 			'updated_items' => $updated_items,
-			'updated_invs' => $updated_invs,
+			'updated_invs' => count($updated_invs),
+			'inventories' => $updated_invs,
+			'added' => null,
+			'updated' => null,
+			'removed' => null,
         ]);
     }
+
+	#[Route('/pull2', name: "app_inventory_pull2")]
+	public function pull2(InventoryRepository $inventoryRepository, BrickItemRepository $itemRepository, BrickLink $api): Response
+	{
+		$error = "";
+
+		$response_json = $api->getInventories();
+
+		if ($response_json['meta']['code'] !== 200)
+		{
+			$error = array('message' => $response_json['meta']['message'], 'description' => $response_json['meta']['description']);
+			return $this->render('inventory/pull.html.twig', [
+				'controller_name' => 'InventoryController',
+				'error' => $error,
+			]);
+		}
+
+		// some stats
+		$updated_items = 0;
+		$inv_added = [];
+		$inv_updated = [];
+		$inv_removed = [];
+
+		// important for json processing
+		$item_list = [];
+		$item_id_list = [];
+		$inventory_list = [];
+		$inventory_id_list = [];
+
+		// processing items
+		for ($i=0; $i < count($response_json['data']); $i++)
+		{
+			$value = $response_json['data'][$i];
+
+			$item = new BrickItem();
+			$item->setNo($value['item']['no']);
+			$item->setName($value['item']['name']);
+			$item->setType($value['item']['type']);
+			$item->setCategoryId($value['item']['category_id']);
+			if (!array_key_exists($value['item']['no'], $item_list))
+			{
+				$item_list[$value['item']['no']] = $item;
+				array_push($item_id_list, $value['item']['no']);
+			}
+		}
+
+		$db_item_list = $itemRepository->findAll(); // get all items from db
+
+		foreach ($item_list as $key => $value)
+		{
+			$found = false;
+			for ($i=0; $i < count($db_item_list); $i++)
+			{
+				if ($item_list[$key]->getNo() === $db_item_list[$i]->getNo())
+				{
+					$found = true;
+					$item_list[$key] = $db_item_list[$i];
+					break;
+				}
+			}
+			if (!$found)
+			{
+				$itemRepository->add($item_list[$key]);
+				$updated_items++;
+			}
+		}
+
+		$itemRepository->flush();
+
+		// processing invs
+		for ($i=0; $i < count($response_json['data']); $i++)
+		{
+			$value = $response_json['data'][$i];
+			$item = $item_list[$value['item']['no']];
+
+			$inventory = new Inventory();
+			$inventory->setInventoryId($value['inventory_id']);
+			$inventory->setItem($item);
+			if (strcmp($item->getType(), 'SET') == 0)
+			{
+				$inventory->setCompleteness('completeness');
+			}
+			$inventory->setColorId($value['color_id']);
+			$inventory->setColorName($value['color_name']);
+			$inventory->setQuantity($value['quantity']);
+			$inventory->setNewOrUsed($value['new_or_used']);
+			$inventory->setUnitPrice($value['unit_price']);
+			$inventory->setBindId($value['bind_id']);
+			$inventory->setDescription($value['description']);
+			$inventory->setRemarks($value['remarks']);
+			$inventory->setBulk($value['bulk']);
+			$inventory->setIsRetain($value['is_retain']);
+			$inventory->setIsStockRoom($value['is_stock_room']);
+			$inventory->setDateCreated(new \DateTime($value['date_created']));
+			$inventory->setMyCost($value['my_cost']);
+			$inventory->setSaleRate($value['sale_rate']);
+			$inventory->setTierQuantity1($value['tier_quantity1']);
+			$inventory->setTierPrice1($value['tier_price1']);
+			$inventory->setTierQuantity2($value['tier_quantity2']);
+			$inventory->setTierPrice2($value['tier_price2']);
+			$inventory->setTierQuantity3($value['tier_quantity3']);
+			$inventory->setTierPrice3($value['tier_price3']);
+			$inventory->setMyWeight($value['my_weight']);
+			$inventory_list[$inventory->getInventoryId()] = $inventory;
+			array_push($inventory_id_list, $inventory->getInventoryId());
+		}
+
+		$db_inv_list = $inventoryRepository->findAll();
+
+		for ($i=0; $i < count($db_inv_list); $i++)
+		{
+			if (array_key_exists($db_inv_list[$i]->getInventoryId(), $inventory_list))
+			{
+				if ($db_inv_list[$i]->update($inventory_list[$db_inv_list[$i]->getInventoryId()]))
+				{
+					// updating existing invs (if needed);
+					$inventoryRepository->add($db_inv_list[$i]);
+					array_push($inv_updated, $db_inv_list[$i]);
+				}
+			}
+			else
+			{
+				// removing unused invs;
+				$inventoryRepository->remove($db_inv_list[$i]);
+				array_push($inv_removed, $db_inv_list[$i]);
+			}
+			unset($inventory_list[$db_inv_list[$i]->getInventoryId()]);
+		}
+
+		for ($i=0; $i < count($inventory_list); $i++)
+		{
+			// adding new invs;
+			$id = array_keys($inventory_list)[$i];
+			$inventoryRepository->add($inventory_list[$id]);
+			array_push($inv_added, $inventory_list[$id]);
+		}
+		$inventoryRepository->flush();
+
+		return $this->render('inventory/pull.html.twig', [
+            'controller_name' => 'InventoryController',
+			'error' => '',
+			'updated_items' => $updated_items,
+			'updated_invs' => null,
+			'added' => count($inv_added),
+			'updated' => count($inv_updated),
+			'removed' => count($inv_removed),
+        ]);
+	}
 }

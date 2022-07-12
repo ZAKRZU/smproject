@@ -5,8 +5,25 @@
 {% block body %}
     <a href="{{ path('app_dashboard') }}" class="btn btn-primary m-2">back to list</a>
     <div class="container">
-        <p>{{ updated_items }} items has been updated</p>
-        <p>{{ updated_invs }} inventories has been updated </p>
+        <div class="m-auto text-center">
+            {% if error %}
+                <h2>Error occured</h2>
+                <p>Message: {{ error.message }}</p>
+                <p>Description: {{ error.description }}</p>
+            {% else %}
+                <p>{{ updated_items }} items has been added/updated</p>
+                {% if updated_invs is not same as(null) %}
+                    <p>{{ updated_invs }} inventories has been updated </p>
+                {% else %}
+                    <p>{{ added }} inventories has been added </p>
+                    <p>{{ updated }} inventories has been updated </p>
+                    <p>{{ removed }} inventories has been removed </p>
+                {% endif %}
+                {# <ul>
+                    {{ dump(inventories) }}
+                </ul> #}
+            {% endif %}
+        </div>
     </div>
         
 {% endblock %}

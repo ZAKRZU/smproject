@@ -39,6 +39,21 @@ class InventoryRepository extends ServiceEntityRepository
         }
     }
 
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+    }
+
+    public function findAllFromIdList($idList): array
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.inventoryId in (:val)')
+            ->setParameter('val', $idList)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 //    /**
 //     * @return Inventory[] Returns an array of Inventory objects
 //     */

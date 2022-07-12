@@ -44,11 +44,6 @@ class LoginController extends AbstractController
             ->add('login', SubmitType::class)
             ->getForm();
 
-        // $form->handleRequest($request);
-        // if ($form->isSubmitted() && $form->isValid()) {
-
-        // }
-
         return $this->render('login/index.html.twig', [
             'controller_name' => 'LoginController',
             'form' => $form->createView(),

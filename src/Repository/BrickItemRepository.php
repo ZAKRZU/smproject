@@ -39,6 +39,21 @@ class BrickItemRepository extends ServiceEntityRepository
         }
     }
 
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+    }
+
+    public function findAllFromIdList($idList): array
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.no in (:val)')
+            ->setParameter('val', $idList)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 //    /**
 //     * @return BrickItem[] Returns an array of BrickItem objects
 //     */
