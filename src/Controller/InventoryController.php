@@ -201,7 +201,9 @@ class InventoryController extends AbstractController
 
 		if ($response_json['meta']['code'] !== 200)
 		{
-			$error = array('message' => $response_json['meta']['message'], 'description' => $response_json['meta']['description']);
+			$error = array('message' => $response_json['meta']['message'],
+						   'description' => $response_json['meta']['description']);
+
 			return $this->render('inventory/pull.html.twig', [
 				'controller_name' => 'InventoryController',
 				'error' => $error,
@@ -304,18 +306,23 @@ class InventoryController extends AbstractController
 		{
 			if (array_key_exists($db_inv_list[$i]->getInventoryId(), $inventory_list))
 			{
-				if ($db_inv_list[$i]->update($inventory_list[$db_inv_list[$i]->getInventoryId()]))
+				$updated = $db_inv_list[$i]->update($inventory_list[$db_inv_list[$i]->getInventoryId()]);
+				if (count($updated) > 0)
 				{
 					// updating existing invs (if needed);
 					$inventoryRepository->add($db_inv_list[$i]);
-					array_push($inv_updated, $db_inv_list[$i]);
+					// array_push($inv_updated, $updated);
+					$inv_updated = array_merge($inv_updated, $updated);
 				}
 			}
 			else
 			{
 				// removing unused invs;
 				$inventoryRepository->remove($db_inv_list[$i]);
-				array_push($inv_removed, $db_inv_list[$i]);
+				array_push($inv_removed,
+							[ $db_inv_list[$i],
+							  'Removed inventory id: '.$db_inv_list[$i]->getInventoryId() ]);
+
 			}
 			unset($inventory_list[$db_inv_list[$i]->getInventoryId()]);
 		}
@@ -337,6 +344,8 @@ class InventoryController extends AbstractController
 			'added' => count($inv_added),
 			'updated' => count($inv_updated),
 			'removed' => count($inv_removed),
+			'update_logs' => $inv_updated,
+			'removed_logs' => $inv_removed,
         ]);
 	}
 }

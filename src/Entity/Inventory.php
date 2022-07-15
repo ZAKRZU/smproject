@@ -438,66 +438,57 @@ class Inventory
         return $this;
     }
 
-    public function isEqual(Inventory $inventory): bool
+    public function __get($property)
     {
-        return $this->getInventoryId() === $inventory->getInventoryId() &&
-        $this->getColorId() === $inventory->getColorId() &&
-        $this->getColorName() === $inventory->getColorName() &&
-        $this->getQuantity() === $inventory->getQuantity() &&
-        $this->getNewOrUsed() === $inventory->getNewOrUsed() &&
-        $this->getUnitPrice() === $inventory->getUnitPrice() &&
-        $this->getBindId() === $inventory->getBindId() &&
-        $this->getDescription() === $inventory->getDescription() &&
-        $this->getRemarks() === $inventory->getRemarks() &&
-        $this->getBulk() === $inventory->getBulk() &&
-        $this->isIsRetain() === $inventory->isIsRetain() &&
-        $this->isIsStockRoom() === $inventory->isIsStockRoom() &&
-        $this->getDateCreated() == $inventory->getDateCreated() &&
-        $this->getMyCost() === $inventory->getMyCost() &&
-        $this->getSaleRate() === $inventory->getSaleRate() &&
-        $this->getTierPrice1() === $inventory->getTierPrice1() &&
-        $this->getTierPrice2() === $inventory->getTierPrice2() &&
-        $this->getTierPrice3() === $inventory->getTierPrice3() &&
-        $this->getTierQuantity1() === $inventory->getTierQuantity1() &&
-        $this->getTierQuantity2() === $inventory->getTierQuantity2() &&
-        $this->getTierQuantity3() === $inventory->getTierQuantity3() &&
-        $this->getMyWeight() === $inventory->getMyWeight() &&
-        $this->getCompleteness() === $inventory->getCompleteness() &&
-        $this->getStockRoomId() === $inventory->getStockRoomId();
+        if (property_exists($this, $property))
+        {
+            return $this->$property;
+        }
     }
 
-    // Temporary solution
-    public function update(Inventory $inventory): bool
+    public function __set($property, $value)
     {
-        if (!$this->isEqual($inventory))
+        if (property_exists($this, $property))
         {
-            $this->setInventoryId($inventory->getInventoryId());
-            $this->setColorId($inventory->getColorId());
-            $this->setColorName($inventory->getColorName());
-            $this->setQuantity($inventory->getQuantity());
-            $this->setNewOrUsed($inventory->getNewOrUsed());
-            $this->setUnitPrice($inventory->getUnitPrice());
-            $this->setBindId($inventory->getBindId());
-            $this->setDescription($inventory->getDescription());
-            $this->setRemarks($inventory->getRemarks());
-            $this->setBulk($inventory->getBulk());
-            $this->setIsRetain($inventory->isIsRetain());
-            $this->setIsStockRoom($inventory->isIsStockRoom());
-            $this->setDateCreated($inventory->getDateCreated());
-            $this->setMyCost($inventory->getMyCost());
-            $this->setSaleRate($inventory->getSaleRate());
-            $this->setTierPrice1($inventory->getTierPrice1());
-            $this->setTierPrice2($inventory->getTierPrice2());
-            $this->setTierPrice3($inventory->getTierPrice3());
-            $this->setTierQuantity1($inventory->getTierQuantity1());
-            $this->setTierQuantity2($inventory->getTierQuantity2());
-            $this->setTierQuantity3($inventory->getTierQuantity3());
-            $this->setMyWeight($inventory->getMyWeight());
-            $this->setCompleteness($inventory->getCompleteness());
-            $this->setStockRoomId($inventory->getStockRoomId());
-            return true;
+            $this->$property = $value;
         }
-        return false;
+
+        return $this;
+    }
+
+    public function update(Inventory $inventory): array
+    {
+        $hasBeenUpdate = false;
+        $logs = [];
+        foreach (get_object_vars($this) as $key => $value)
+        {
+            if ($key === 'id')
+                continue;
+            if ($key === 'dateCreated')
+            {
+                if (!($inventory->__get($key) == $this->$key))
+                {
+                    array_push($logs,
+                                'Changed inventory id: '.$this->getInventoryId()
+                                .' property '.$key
+                                .' from '.$this->$key.' to '.$inventory->__get($key));
+                    $this->$key = $inventory->__get($key);
+                    $ret = true;
+                }
+                continue;
+            }
+            else
+            if (!($inventory->__get($key) === $this->$key))
+            {
+                array_push($logs,
+                'Changed inventory id: '.$this->getInventoryId()
+                .' property '.$key
+                .' from '.$this->$key.' to '.$inventory->__get($key));
+                $this->$key = $inventory->__get($key);
+                $ret = true;
+            }
+        }
+        return $logs;
     }
 
 }

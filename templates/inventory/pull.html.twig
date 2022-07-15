@@ -18,6 +18,17 @@
                     <p>{{ added }} inventories has been added </p>
                     <p>{{ updated }} inventories has been updated </p>
                     <p>{{ removed }} inventories has been removed </p>
+                    {% if update_logs or removed_logs %}
+                    <h4>Changelogs</h4>
+                    <ul class="list-group list-group-flush">
+                        {% for log in update_logs %}
+                            <li class="list-group-item">{{ log }}</li>
+                        {% endfor %}
+                        {% for log in removed_logs %}
+                            <li class="list-group-item">{{ log[1] }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
                 {% endif %}
                 {# <ul>
                     {{ dump(inventories) }}
