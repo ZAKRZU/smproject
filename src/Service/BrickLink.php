@@ -21,15 +21,7 @@ class BrickLink
         $this->tokenSecret = $_ENV['TOKEN_SECRET'];
         $this->endpoint = 'https://api.bricklink.com/api/store/v1';
         $this->params = [];
-        $this->headers = [
-            'oauth_consumer_key' => $_ENV['CONSUMER_KEY'],
-            'oauth_nonce' => substr( md5(rand()), 0, 7),
-            'oauth_signature_method' => 'HMAC-SHA1',
-            'oauth_signature' => null,
-            'oauth_timestamp' => (string) time(),
-            'oauth_token' => $_ENV['TOKEN_VALUE'],
-            'oauth_version' => '1.0',
-        ];
+        $this->generatetHeaders();
     }
 
     public function getInventories(): array
@@ -70,9 +62,23 @@ class BrickLink
         return $content;
     }
 
-    public function getItem(string $type, int $id): array
+    public function getItem(string $type, string $no): array
     {
-        $path = '/item/'.$type.'/'.$id.'/';
+        $path = '/items/'.$type.'/'.$no;
+
+        $response = $this->client->request(
+            'GET',
+            $this->generateUrl('GET', $path),
+        );
+
+        $content = $response->toArray();
+
+        return $content;
+    }
+
+    public function getItemImage(string $type, string $no, int $colorId): array
+    {
+        $path = '/items/'.$type.'/'.$no.'/images/'.$colorId;
 
         $response = $this->client->request(
             'GET',
@@ -86,6 +92,7 @@ class BrickLink
 
     private function generateSignature(String $method, String $path)
     {
+        $this->generatetHeaders();
         $parameters = $this->headers;
         if ($method == 'GET')
         {
@@ -116,5 +123,18 @@ class BrickLink
         }
         return $url;
     }
+
+    private function generatetHeaders(){
+        $this->headers = [
+            'oauth_consumer_key' => $_ENV['CONSUMER_KEY'],
+            'oauth_nonce' => substr( md5(rand()), 0, 7),
+            'oauth_signature_method' => 'HMAC-SHA1',
+            'oauth_signature' => null,
+            'oauth_timestamp' => (string) time(),
+            'oauth_token' => $_ENV['TOKEN_VALUE'],
+            'oauth_version' => '1.0',
+        ];
+    }
+
 
 }

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\BrickItemRepository;
+use App\Service\BrickLink;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -282,4 +283,5 @@ class BrickItem
 
         return $this;
     }
+    
 }

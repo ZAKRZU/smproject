@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\InventoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use function PHPUnit\Framework\matches;
+
 #[ORM\Entity(repositoryClass: InventoryRepository::class)]
 class Inventory
 {
@@ -96,10 +98,6 @@ class Inventory
         $data = json_decode($json);
         $this->setId($data->inventory_id);
         $this->setItem($data->item);
-        $this->setItemNo($data->item->no);
-        $this->setItemName($data->item->name);
-        $this->setItemType($data->item->type);
-        $this->setItemCategoryId($data->item->category_id);
         $this->setColorId($data->color_id);
         $this->setColorName($data->color_name);
         $this->setQuantity($data->quantity);
@@ -489,6 +487,30 @@ class Inventory
             }
         }
         return $logs;
+    }
+
+    public function getThumbnailUrl(): string{
+        $firstLetterOfType = str_split($this->getItem()->getType())[0];
+        $itemNo = $this->getItem()->getNo();
+        $colorId = $this->getColorId();
+
+        if(preg_match('/I|M|S|B|G|C|U|O/', $firstLetterOfType)){
+            return '//img.bricklink.com/'.$firstLetterOfType.'/'.$itemNo.'.jpg';    
+        }
+
+        return '//img.bricklink.com/'.$firstLetterOfType.'/'.$colorId.'/'.$itemNo.'.jpg';
+    }
+
+    public function getImageUrl(): string{
+        $firstLetterOfType = str_split($this->getItem()->getType())[0];
+        $itemNo = $this->getItem()->getNo();
+        $colorId = $this->getColorId();
+
+        if(preg_match('(Not Applicable)', $colorId)){
+            return '//img.bricklink.com/ItemImage/'.$firstLetterOfType.'N/0/'.$itemNo.'.png';    
+        }
+
+        return '//img.bricklink.com/ItemImage/'.$firstLetterOfType.'N/'.$colorId.'/'.$itemNo.'.png';
     }
 
 }

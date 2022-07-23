@@ -87,13 +87,13 @@ class InventoryController extends AbstractController
 	{
 		$error = "";
 		// // setup api request
-		// $httpHandle = new HttpHandle(HttpClient::create());
+		//$httpHandle = new HttpHandle(HttpClient::create());
 
 		// // fetch items
-		// $response = $httpHandle->fetchBrickLinkInventory();
+		//$response = $httpHandle->fetchBrickLinkInventory();
 
 		// // decode json respone to php array
-		// $response_json = json_decode($response, true);
+		//$response_json = json_decode($response, true);
 		$response_json = $api->getInventories();
 
 		if ($response_json['meta']['code'] !== 200)

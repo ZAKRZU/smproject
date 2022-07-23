@@ -5,13 +5,13 @@
 {% block body %}
     <a href="{{ path('app_dashboard') }}" class="btn btn-primary m-2">back to list</a>
     <div class="container">
-        <h1>Inventory {{ inventory.id }}</h1>
-
-        <div>
-            <img src="https://img.bricklink.com/ItemImage/PN/5/2357.png">
-        </div>
+        <h1>Inventory {{ inventory.inventoryId }}</h1>
 
         <div class="row align-items-start">
+            <div class="col">
+                <img src= '{{inventory.imageUrl}}' ></p>
+            </div>
+
             <div class="col">
                 <h2>Item information</h2>
 
@@ -58,6 +58,15 @@
 
                 <div class="row align-items-start">
                     <div class="col">
+                        Unit price: 
+                    </div>
+                    <div class="col">
+                        {{ inventory.unitPrice }}
+                    </div>
+                </div>
+
+                <div class="row align-items-start">
+                    <div class="col">
                         Quantity: 
                     </div>
                     <div class="col">
@@ -82,25 +91,16 @@
                         {{ inventory.saleRate }}
                     </div>
                 </div>
-                    <div class="row align-items-start">
-                        <div class="col">
-                            Completeness:
-                        </div>
-                        <div class="col">
-                            {% if inventory.completeness %}
-                                {{ inventory.completeness }}
-                            {% else %}
-                                <span>NULL</span>
-                            {% endif %}
-                        </div>
-                    </div>
-
                 <div class="row align-items-start">
                     <div class="col">
-                        Unit price: 
+                        Completeness:
                     </div>
-                    <div class="col">
-                        {{ inventory.unitPrice }}
+                        <div class="col">
+                        {% if inventory.completeness %}
+                        {{ inventory.completeness }}
+                        {% else %}
+                            <span>NULL</span>
+                        {% endif %}
                     </div>
                 </div>
 

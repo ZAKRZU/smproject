@@ -11,10 +11,13 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Inv id</th>
-                    <th>Item id number</th>
+                    <th></th>
+                    <th>Lot ID</th>
+                    <th>Item number</th>
                     <th>Item name</th>
                     <th>Item type</th>
+                    <th>Unit Price</th>
+                    <th>Quantity</th>
                     <th>Creation date</th>
                     <th>Actions</th>
                 </tr>
@@ -22,17 +25,20 @@
             <tbody>
             {% for item in inventories %}
                 <tr>
+                    <td><img src='{{ item.thumbnailUrl }}'></td>
                     <td>{{ item.inventoryId }}</td>
                     <td>{{ item.Item.no }}</td>
                     <td>{{ item.Item.name }}</td>
                     <td>{{ item.Item.type }}</td>
+                    <td>{{ item.unitPrice }}</td>
+                    <td>{{ item.quantity }}</td>
                     <td>{{ item.dateCreated|date("d/m/Y H:i") }}</td>
                     <td><a href="{{ path('app_inventory_show', {'id': item.id}) }}" class="btn btn-light">show</a></td>
                     
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="6">no records found</td>
+                    <td colspan="9">no records found</td>
                 </tr>
             {% endfor %}
             </tbody>
